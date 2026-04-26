@@ -97,6 +97,46 @@ combined:
 - `frontend.service.*` and `backend.service.*`: Service tuning
 - `ingress.*`: Ingress and Traefik annotations
 
+## Secrets with Helm
+
+The chart injects the configured Secret into the backend container with `envFrom`.
+
+For upstream ExcaliDash, the important production keys are `JWT_SECRET` and `CSRF_SECRET`. `BOOTSTRAP_ADMIN_KEY` is not part of the upstream production example and is not required by this chart.
+
+If you want Helm to create and manage the Secret:
+
+```yaml
+secret:
+  create: true
+  stringData:
+    JWT_SECRET: replace-with-a-long-random-secret
+    CSRF_SECRET: replace-with-a-long-random-secret
+  extraStringData:
+    OIDC_CLIENT_SECRET: replace-me-if-needed
+```
+
+If you already have a Kubernetes Secret and want the chart to use it:
+
+```yaml
+secret:
+  create: false
+  name: excalidash-secrets
+```
+
+Example Secret:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: excalidash-secrets
+  namespace: excalidash
+type: Opaque
+stringData:
+  JWT_SECRET: replace-with-a-long-random-secret
+  CSRF_SECRET: replace-with-a-long-random-secret
+```
+
 ## OIDC example
 
 ```yaml
@@ -125,9 +165,10 @@ Bump version in Chart.yaml for each release. Package chart into docs/charts. Reb
 
 helm lint . 
 helm package . --destination docs/charts 
-helm repo index docs/charts --url https://ashwinijindal10.github.io/restic-ops-helm-repo/charts
+helm repo index docs/charts --url https://ashwinijindal10.github.io/excalidash-helm-repo/charts
 
-git add . git commit -m "chore(release): package chart and update index" git push origin main
+git add . git commit -m "chore(release): package chart and update index" 
+git push origin main
 ```
 ## Sources
 

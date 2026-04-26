@@ -26,7 +26,26 @@ This chart leans into those realities instead of pretending the app is horizonta
 - ingress defaults are Traefik-friendly
 - backend outbound update checks are disabled by default
 
-## Quick start
+## Install from Helm repo
+
+```bash
+helm repo add excalidash https://ashwinijindal10.github.io/excalidash-helm-repo/charts
+helm repo update
+helm search repo excalidash
+```
+
+Install the packaged chart:
+
+```bash
+helm upgrade --install excalidash excalidash/excalidash \
+  --namespace excalidash \
+  --create-namespace \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host=excalidash.example.com \
+  --set backend.env.FRONTEND_URL=https://excalidash.example.com
+```
+
+## Quick start from local checkout
 
 ```bash
 helm upgrade --install excalidash . \

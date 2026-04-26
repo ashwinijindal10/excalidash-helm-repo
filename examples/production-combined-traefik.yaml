@@ -1,4 +1,4 @@
-deploymentMode: combined
+singleDeployment: true
 
 combined:
   replicaCount: 1

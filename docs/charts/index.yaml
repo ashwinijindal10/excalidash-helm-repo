@@ -1,0 +1,32 @@
+apiVersion: v1
+entries:
+  excalidash:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Initial chart with single or split frontend/backend deployment modes.
+    apiVersion: v2
+    appVersion: 0.4.27
+    created: "2026-04-26T14:42:03.085421+05:30"
+    description: Production-oriented Helm chart for ExcaliDash with single or split
+      frontend/backend deployment modes.
+    digest: 041a9c2d6c637f7e8cf45e9373eee8ccbfd533c6386b3f3a986d5b68e58b0c09
+    home: https://github.com/ZimengXiong/ExcaliDash
+    keywords:
+    - excalidash
+    - excalidraw
+    - dashboard
+    - collaboration
+    - whiteboard
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: Ashwini Jindal
+    name: excalidash
+    sources:
+    - https://github.com/ZimengXiong/ExcaliDash
+    - https://artifacthub.io/packages/helm/unxwares/excalidash
+    type: application
+    urls:
+    - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-04-26T14:42:03.082679+05:30"

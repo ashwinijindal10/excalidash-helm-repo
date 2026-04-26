@@ -17,7 +17,7 @@ spec:
   type: {{ .Values.backend.service.type }}
   selector:
     {{- include "excalidash.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: {{ ternary "combined" "backend" (eq .Values.deploymentMode "combined") }}
+    app.kubernetes.io/component: {{ ternary "combined" "backend" .Values.singleDeployment }}
   ports:
     - name: http
       port: {{ .Values.backend.service.port }}

@@ -1,4 +1,4 @@
-1. Deployment mode: {{ .Values.deploymentMode }}
+1. Single deployment: {{ .Values.singleDeployment }}
 
 2. Frontend service:
    kubectl get svc {{ include "excalidash.frontendServiceName" . }} -n {{ .Release.Namespace }}

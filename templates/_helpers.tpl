@@ -88,7 +88,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "excalidash.computedBackendUrl" -}}
 {{- if .Values.frontend.env.BACKEND_URL -}}
 {{- .Values.frontend.env.BACKEND_URL -}}
-{{- else if eq .Values.deploymentMode "combined" -}}
+{{- else if .Values.singleDeployment -}}
 {{- printf "127.0.0.1:%v" .Values.backend.service.port -}}
 {{- else -}}
 {{- printf "%s:%v" (include "excalidash.backendServiceName" .) .Values.backend.service.port -}}

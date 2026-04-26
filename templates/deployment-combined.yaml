@@ -1,4 +1,4 @@
-{{- if eq .Values.deploymentMode "combined" }}
+{{- if .Values.singleDeployment }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

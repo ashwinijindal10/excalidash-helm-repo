@@ -4,8 +4,8 @@ This chart packages [ExcaliDash](https://github.com/ZimengXiong/ExcaliDash) for 
 
 It supports two deployment styles:
 
-- `deploymentMode: combined`: frontend and backend run as two containers in one pod.
-- `deploymentMode: split`: frontend and backend run in separate Deployments.
+- `singleDeployment: true`: frontend and backend run as two containers in one pod.
+- `singleDeployment: false`: frontend and backend run in separate Deployments.
 
 ## Why this chart exists
 
@@ -69,7 +69,7 @@ backend:
 ## Split mode example
 
 ```yaml
-deploymentMode: split
+singleDeployment: false
 
 frontend:
   replicaCount: 2
@@ -81,7 +81,7 @@ backend:
 ## Combined mode example
 
 ```yaml
-deploymentMode: combined
+singleDeployment: true
 
 combined:
   replicaCount: 1
@@ -115,6 +115,20 @@ backend:
     FRONTEND_URL: https://excalidash.example.com
 ```
 
+## Rebuild and publish chart (after changes)
+
+Run these steps when Chart.yaml, templates/, or chart behavior changes.
+
+Bump version in Chart.yaml for each release. Package chart into docs/charts. Rebuild chart index with the same repository base URL. Commit and push.
+
+```
+
+helm lint . 
+helm package . --destination docs/charts 
+helm repo index docs/charts --url https://ashwinijindal10.github.io/restic-ops-helm-repo/charts
+
+git add . git commit -m "chore(release): package chart and update index" git push origin main
+```
 ## Sources
 
 - [Upstream app repo](https://github.com/ZimengXiong/ExcaliDash)

@@ -13,7 +13,7 @@ spec:
     - Ingress
     - Egress
   ingress:
-    {{- if eq .Values.deploymentMode "combined" }}
+    {{- if .Values.singleDeployment }}
     {{- toYaml .Values.networkPolicy.ingress.frontend | nindent 4 }}
     {{- else }}
     {{- toYaml .Values.networkPolicy.ingress.frontend | nindent 4 }}

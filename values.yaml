@@ -3,7 +3,7 @@ fullnameOverride: ""
 
 imagePullSecrets: []
 
-deploymentMode: combined
+singleDeployment: true
 
 unsafe:
   allowMultipleBackendReplicas: false

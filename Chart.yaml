@@ -1,6 +1,6 @@
 apiVersion: v2
 name: excalidash
-description: Production-oriented Helm chart for ExcaliDash with combined or split frontend/backend deployment modes.
+description: Production-oriented Helm chart for ExcaliDash with single or split frontend/backend deployment modes.
 type: application
 version: 0.1.0
 appVersion: "0.4.27"
@@ -20,4 +20,4 @@ maintainers:
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: Initial chart with combined or split frontend/backend deployment modes.
+      description: Initial chart with single or split frontend/backend deployment modes.

@@ -1,4 +1,4 @@
-deploymentMode: split
+singleDeployment: false
 
 frontend:
   replicaCount: 2

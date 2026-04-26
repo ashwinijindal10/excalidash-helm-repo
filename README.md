@@ -180,13 +180,15 @@ Run these steps when Chart.yaml, templates/, or chart behavior changes.
 
 Bump version in Chart.yaml for each release. Package chart into docs/charts. Rebuild chart index with the same repository base URL. Commit and push.
 
+> update version in Chart.yaml:
+
 ```
 
 helm lint . 
 helm package . --destination docs/charts 
 helm repo index docs/charts --url https://ashwinijindal10.github.io/excalidash-helm-repo/charts
 
-git add . git commit -m "chore(release): package chart and update index" 
+git add . && git commit -m "chore(release): package chart and update index" 
 git push origin main
 ```
 ## Sources

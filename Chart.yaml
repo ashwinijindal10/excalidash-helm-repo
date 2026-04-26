@@ -2,7 +2,7 @@ apiVersion: v2
 name: excalidash
 description: Production-oriented Helm chart for ExcaliDash with single or split frontend/backend deployment modes.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "0.4.27"
 kubeVersion: ">=1.25.0-0"
 keywords:

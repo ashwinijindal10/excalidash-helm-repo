@@ -189,7 +189,7 @@ helm package . --destination docs/charts
 helm repo index docs/charts --url https://ashwinijindal10.github.io/excalidash-helm-repo/charts
 
 git add . && git commit -m "chore(release): package chart and update index" 
-git push origin main
+git push 
 ```
 ## Sources
 

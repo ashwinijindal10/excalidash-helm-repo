@@ -49,6 +49,7 @@ frontend:
   resources: {}
   containerSecurityContext:
     allowPrivilegeEscalation: false
+    runAsUser: 0
     capabilities:
       add:
         - CHOWN
@@ -116,6 +117,7 @@ backend:
   resources: {}
   containerSecurityContext:
     allowPrivilegeEscalation: false
+    runAsUser: 0
     capabilities:
       add:
         - CHOWN

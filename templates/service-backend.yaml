@@ -1,0 +1,26 @@
+{{- if .Values.backend.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "excalidash.backendServiceName" . }}
+  labels:
+    {{- include "excalidash.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+    {{- with .Values.backend.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.backend.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.backend.service.type }}
+  selector:
+    {{- include "excalidash.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: {{ ternary "combined" "backend" (eq .Values.deploymentMode "combined") }}
+  ports:
+    - name: http
+      port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.port }}
+      protocol: TCP
+{{- end }}

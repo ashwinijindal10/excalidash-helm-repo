@@ -1,0 +1,45 @@
+deploymentMode: combined
+
+combined:
+  replicaCount: 1
+
+secret:
+  stringData:
+    JWT_SECRET: replace-with-a-long-random-secret
+    CSRF_SECRET: replace-with-a-long-random-secret
+
+backend:
+  env:
+    PORT: "8000"
+    NODE_ENV: production
+    DATABASE_URL: file:/app/prisma/dev.db
+    FRONTEND_URL: https://excalidash.example.com
+    TRUST_PROXY: "1"
+    AUTH_MODE: local
+    ENFORCE_HTTPS_REDIRECT: "true"
+    UPDATE_CHECK_OUTBOUND: "false"
+
+  persistence:
+    enabled: true
+    size: 20Gi
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: excalidash.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: excalidash-tls
+      hosts:
+        - excalidash.example.com
+  traefik:
+    entrypoints:
+      - websecure
+    tls: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

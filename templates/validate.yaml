@@ -1,0 +1,15 @@
+{{- if not (has .Values.deploymentMode (list "combined" "split")) -}}
+{{- fail "Values.deploymentMode must be either 'combined' or 'split'." -}}
+{{- end -}}
+
+{{- if and (eq .Values.deploymentMode "combined") (gt (int .Values.combined.replicaCount) 1) (not .Values.unsafe.allowMultipleBackendReplicas) -}}
+{{- fail "combined.replicaCount > 1 is blocked by default because ExcaliDash backend state is not horizontally safe. Set unsafe.allowMultipleBackendReplicas=true if you really want this." -}}
+{{- end -}}
+
+{{- if and (eq .Values.deploymentMode "split") (gt (int .Values.backend.replicaCount) 1) (not .Values.unsafe.allowMultipleBackendReplicas) -}}
+{{- fail "backend.replicaCount > 1 is blocked by default because upstream ExcaliDash does not recommend multiple backend replicas. Set unsafe.allowMultipleBackendReplicas=true if you really want this." -}}
+{{- end -}}
+
+{{- if and .Values.ingress.enabled (not .Values.ingress.hosts) -}}
+{{- fail "ingress.enabled=true requires at least one ingress.hosts entry." -}}
+{{- end -}}

@@ -1,0 +1,253 @@
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+deploymentMode: combined
+
+unsafe:
+  allowMultipleBackendReplicas: false
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: false
+
+commonLabels: {}
+commonAnnotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+extraObjects: []
+
+secret:
+  create: true
+  name: ""
+  annotations: {}
+  labels: {}
+  stringData:
+    JWT_SECRET: ""
+    CSRF_SECRET: ""
+  extraStringData: {}
+
+frontend:
+  enabled: true
+  replicaCount: 1
+  revisionHistoryLimit: 3
+  image:
+    registry: docker.io
+    repository: zimengxiong/excalidash-frontend
+    tag: "0.4.27"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    annotations: {}
+    labels: {}
+  resources: {}
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  command: []
+  args: []
+  env:
+    BACKEND_URL: ""
+  extraEnv: []
+  envFrom: []
+  extraVolumeMounts: []
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 6
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+  startupProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 18
+  podSecurityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: []
+  priorityClassName: ""
+  terminationGracePeriodSeconds: 30
+  deploymentAnnotations: {}
+  updateStrategy: {}
+  extraVolumes: []
+
+backend:
+  enabled: true
+  replicaCount: 1
+  revisionHistoryLimit: 3
+  image:
+    registry: docker.io
+    repository: zimengxiong/excalidash-backend
+    tag: "0.4.27"
+    pullPolicy: IfNotPresent
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8000
+    annotations: {}
+    labels: {}
+  resources: {}
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  command: []
+  args: []
+  env:
+    PORT: "8000"
+    NODE_ENV: production
+    DATABASE_URL: file:/app/prisma/dev.db
+    FRONTEND_URL: https://excalidash.example.com
+    TRUST_PROXY: "1"
+    AUTH_MODE: local
+    ENFORCE_HTTPS_REDIRECT: "true"
+    UPDATE_CHECK_OUTBOUND: "false"
+  extraEnv: []
+  envFrom: []
+  extraVolumeMounts: []
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 20
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 6
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+  startupProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 24
+  podSecurityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: []
+  priorityClassName: ""
+  terminationGracePeriodSeconds: 30
+  deploymentAnnotations: {}
+  updateStrategy: {}
+  extraVolumes: []
+  persistence:
+    enabled: true
+    mountPath: /app/prisma
+    subPath: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClass: ""
+    annotations: {}
+    labels: {}
+    existingClaim: ""
+  initContainers: []
+
+combined:
+  replicaCount: 1
+  revisionHistoryLimit: 3
+  deploymentAnnotations: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: []
+  priorityClassName: ""
+  terminationGracePeriodSeconds: 30
+  updateStrategy: {}
+  extraVolumes: []
+  initContainers: []
+
+ingress:
+  enabled: false
+  className: traefik
+  annotations: {}
+  labels: {}
+  hosts:
+    - host: excalidash.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  traefik:
+    entrypoints:
+      - websecure
+    middlewares: []
+    tls: true
+
+networkPolicy:
+  enabled: false
+  ingress:
+    frontend:
+      - from: []
+        ports:
+          - port: 80
+            protocol: TCP
+    backend:
+      - from: []
+        ports:
+          - port: 8000
+            protocol: TCP
+  egress:
+    - to: []
+      ports: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  maxUnavailable: null
+
+monitoring:
+  serviceMonitor:
+    enabled: false
+    labels: {}
+    annotations: {}
+    interval: 30s
+    scrapeTimeout: 10s
+    frontend:
+      path: /
+    backend:
+      path: /health

@@ -1,0 +1,24 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "excalidash.fullname" . }}
+  labels:
+    {{- include "excalidash.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "excalidash.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    {{- if eq .Values.deploymentMode "combined" }}
+    {{- toYaml .Values.networkPolicy.ingress.frontend | nindent 4 }}
+    {{- else }}
+    {{- toYaml .Values.networkPolicy.ingress.frontend | nindent 4 }}
+    {{- toYaml .Values.networkPolicy.ingress.backend | nindent 4 }}
+    {{- end }}
+  egress:
+    {{- toYaml .Values.networkPolicy.egress | nindent 4 }}
+{{- end }}

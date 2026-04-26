@@ -1,0 +1,47 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "excalidash.fullname" . }}
+  labels:
+    {{- include "excalidash.labels" . | nindent 4 }}
+    {{- with .Values.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if .Values.ingress.traefik.entrypoints }}
+    traefik.ingress.kubernetes.io/router.entrypoints: {{ join "," .Values.ingress.traefik.entrypoints | quote }}
+    {{- end }}
+    {{- if .Values.ingress.traefik.middlewares }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ join "," .Values.ingress.traefik.middlewares | quote }}
+    {{- end }}
+    {{- if hasKey .Values.ingress.traefik "tls" }}
+    traefik.ingress.kubernetes.io/router.tls: {{ .Values.ingress.traefik.tls | quote }}
+    {{- end }}
+spec:
+  {{- with .Values.ingress.className }}
+  ingressClassName: {{ . | quote }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "excalidash.frontendServiceName" $ }}
+                port:
+                  number: {{ $.Values.frontend.service.port }}
+          {{- end }}
+    {{- end }}
+  {{- with .Values.ingress.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

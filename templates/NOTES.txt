@@ -1,0 +1,14 @@
+1. Deployment mode: {{ .Values.deploymentMode }}
+
+2. Frontend service:
+   kubectl get svc {{ include "excalidash.frontendServiceName" . }} -n {{ .Release.Namespace }}
+
+3. Backend service:
+   {{- if .Values.backend.service.enabled }}
+   kubectl get svc {{ include "excalidash.backendServiceName" . }} -n {{ .Release.Namespace }}
+   {{- else }}
+   Disabled
+   {{- end }}
+
+4. Important upstream limitation:
+   ExcaliDash backend is not horizontally safe by default. Keep backend replicas at 1 unless you have consciously accepted the SQLite and in-memory collaboration tradeoffs.

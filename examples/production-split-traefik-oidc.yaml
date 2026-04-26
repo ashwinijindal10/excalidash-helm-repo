@@ -1,0 +1,50 @@
+deploymentMode: split
+
+frontend:
+  replicaCount: 2
+
+backend:
+  replicaCount: 1
+  env:
+    PORT: "8000"
+    NODE_ENV: production
+    DATABASE_URL: file:/app/prisma/dev.db
+    FRONTEND_URL: https://excalidash.example.com
+    TRUST_PROXY: "1"
+    AUTH_MODE: oidc_enforced
+    ENFORCE_HTTPS_REDIRECT: "true"
+    UPDATE_CHECK_OUTBOUND: "false"
+    OIDC_PROVIDER_NAME: Authentik
+    OIDC_ISSUER_URL: https://auth.example.com/application/o/excalidash/
+    OIDC_CLIENT_ID: excalidash
+    OIDC_REDIRECT_URI: https://excalidash.example.com/api/auth/oidc/callback
+    OIDC_SCOPES: openid profile email
+  persistence:
+    enabled: true
+    size: 20Gi
+
+secret:
+  stringData:
+    JWT_SECRET: replace-with-a-long-random-secret
+    CSRF_SECRET: replace-with-a-long-random-secret
+  extraStringData:
+    OIDC_CLIENT_SECRET: replace-if-your-provider-needs-it
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: excalidash.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: excalidash-tls
+      hosts:
+        - excalidash.example.com
+  traefik:
+    entrypoints:
+      - websecure
+    middlewares:
+      - excalidash-security-headers@kubernetescrd
+    tls: true

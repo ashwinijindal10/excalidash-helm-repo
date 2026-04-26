@@ -1,0 +1,209 @@
+{{- if eq .Values.deploymentMode "combined" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "excalidash.fullname" . }}
+  labels:
+    {{- include "excalidash.labels" . | nindent 4 }}
+  {{- with .Values.combined.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.combined.replicaCount }}
+  revisionHistoryLimit: {{ .Values.combined.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "excalidash.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: combined
+  {{- with .Values.combined.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "excalidash.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: combined
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.combined.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.commonAnnotations .Values.podAnnotations .Values.combined.podAnnotations }}
+      annotations:
+        {{- with .Values.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.combined.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "excalidash.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.combined.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.combined.terminationGracePeriodSeconds }}
+      {{- with .Values.combined.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.combined.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.combined.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.combined.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.combined.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.combined.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: frontend
+          image: {{ include "excalidash.frontendImage" . }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          {{- with .Values.frontend.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: frontend-http
+              containerPort: 80
+              protocol: TCP
+          {{- with .Values.frontend.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: BACKEND_URL
+              value: {{ include "excalidash.computedBackendUrl" . | quote }}
+            {{- range $key, $value := .Values.frontend.env }}
+            {{- if ne $key "BACKEND_URL" }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.frontend.extraEnv }}
+            {{- toYaml (list .) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.secret.create .Values.secret.name .Values.frontend.envFrom }}
+          envFrom:
+            {{- include "excalidash.secretEnvFrom" . | nindent 12 }}
+            {{- with .Values.frontend.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.frontend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            {{- tpl (toYaml .Values.frontend.livenessProbe) . | nindent 12 }}
+          readinessProbe:
+            {{- tpl (toYaml .Values.frontend.readinessProbe) . | nindent 12 }}
+          startupProbe:
+            {{- tpl (toYaml .Values.frontend.startupProbe) . | nindent 12 }}
+          {{- if .Values.frontend.extraVolumeMounts }}
+          volumeMounts:
+            {{- with .Values.frontend.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        - name: backend
+          image: {{ include "excalidash.backendImage" . }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          {{- with .Values.backend.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: backend-http
+              containerPort: {{ .Values.backend.service.port }}
+              protocol: TCP
+          {{- with .Values.backend.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.backend.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range $key, $value := .Values.backend.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range .Values.backend.extraEnv }}
+            {{- toYaml (list .) | nindent 12 }}
+            {{- end }}
+          {{- if or .Values.secret.create .Values.secret.name .Values.backend.envFrom }}
+          envFrom:
+            {{- include "excalidash.secretEnvFrom" . | nindent 12 }}
+            {{- with .Values.backend.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.backend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            {{- tpl (toYaml .Values.backend.livenessProbe) . | nindent 12 }}
+          readinessProbe:
+            {{- tpl (toYaml .Values.backend.readinessProbe) . | nindent 12 }}
+          startupProbe:
+            {{- tpl (toYaml .Values.backend.startupProbe) . | nindent 12 }}
+          {{- if or .Values.backend.persistence.enabled .Values.backend.extraVolumeMounts }}
+          volumeMounts:
+            {{- if .Values.backend.persistence.enabled }}
+            - name: backend-data
+              mountPath: {{ .Values.backend.persistence.mountPath }}
+              {{- if .Values.backend.persistence.subPath }}
+              subPath: {{ .Values.backend.persistence.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- with .Values.backend.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+      {{- if or .Values.backend.persistence.enabled .Values.frontend.extraVolumes .Values.backend.extraVolumes .Values.combined.extraVolumes }}
+      volumes:
+        {{- if .Values.backend.persistence.enabled }}
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: {{ default (include "excalidash.backendPvcName" .) .Values.backend.persistence.existingClaim }}
+        {{- end }}
+        {{- with .Values.frontend.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.backend.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.combined.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+{{- end }}

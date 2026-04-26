@@ -2,7 +2,7 @@ apiVersion: v2
 name: excalidash
 description: Production-oriented Helm chart for ExcaliDash with single or split frontend/backend deployment modes.
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: "0.4.27"
 kubeVersion: ">=1.25.0-0"
 keywords:
@@ -23,3 +23,5 @@ annotations:
       description: Initial chart with single or split frontend/backend deployment modes.
     - kind: fixed
       description: Allow frontend and backend startup chown operations by default.
+    - kind: fixed
+      description: Exclude repository metadata and packaged artifacts from the Helm package.

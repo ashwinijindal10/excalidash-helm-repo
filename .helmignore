@@ -1,0 +1,6 @@
+.git/
+.github/
+docs/
+*.tgz
+*.tar.gz
+.DS_Store

@@ -13,10 +13,10 @@ entries:
           description: Relax default container security contexts to avoid startup filesystem permission failures.
     apiVersion: v2
     appVersion: 0.4.27
-    created: "2026-04-26T15:47:29.525088+05:30"
+    created: "2026-04-26T15:55:07.054174+05:30"
     description: Production-oriented Helm chart for ExcaliDash with single or split
       frontend/backend deployment modes.
-    digest: cde39bfd6aba253d43ad87dc1daa39208b420a2f599d770da24bc7f96cf2d431
+    digest: 2feb79f5a58804ce6495f3a051ad6eaf8070f05c61f1eead83e0379051014678
     home: https://github.com/ZimengXiong/ExcaliDash
     keywords:
     - excalidash
@@ -33,38 +33,6 @@ entries:
     - https://artifacthub.io/packages/helm/unxwares/excalidash
     type: application
     urls:
-    - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.5.tgz
-    version: 0.1.5
-  - annotations:
-      artifacthub.io/changes: |
-        - kind: added
-          description: Initial chart with single or split frontend/backend deployment modes.
-        - kind: fixed
-          description: Allow frontend and backend startup chown operations by default.
-        - kind: fixed
-          description: Exclude repository metadata and packaged artifacts from the Helm package.
-    apiVersion: v2
-    appVersion: 0.4.27
-    created: "2026-04-26T15:47:29.524423+05:30"
-    description: Production-oriented Helm chart for ExcaliDash with single or split
-      frontend/backend deployment modes.
-    digest: 50baa3daa0b5989860fac11b2c4728313fb24ba6d8fa56dbbe08e4fffe794b3c
-    home: https://github.com/ZimengXiong/ExcaliDash
-    keywords:
-    - excalidash
-    - excalidraw
-    - dashboard
-    - collaboration
-    - whiteboard
-    kubeVersion: '>=1.25.0-0'
-    maintainers:
-    - name: Ashwini Jindal
-    name: excalidash
-    sources:
-    - https://github.com/ZimengXiong/ExcaliDash
-    - https://artifacthub.io/packages/helm/unxwares/excalidash
-    type: application
-    urls:
-    - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.4.tgz
-    version: 0.1.4
-generated: "2026-04-26T15:47:29.522517+05:30"
+    - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.6.tgz
+    version: 0.1.6
+generated: "2026-04-26T15:55:07.052175+05:30"

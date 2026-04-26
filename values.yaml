@@ -50,6 +50,8 @@ frontend:
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
+      add:
+        - CHOWN
       drop:
         - ALL
     seccompProfile:
@@ -115,6 +117,8 @@ backend:
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
+      add:
+        - CHOWN
       drop:
         - ALL
     seccompProfile:

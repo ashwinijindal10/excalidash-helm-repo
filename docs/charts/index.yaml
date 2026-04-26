@@ -7,10 +7,10 @@ entries:
           description: Initial chart with single or split frontend/backend deployment modes.
     apiVersion: v2
     appVersion: 0.4.27
-    created: "2026-04-26T14:42:03.085421+05:30"
+    created: "2026-04-26T15:25:50.116548+05:30"
     description: Production-oriented Helm chart for ExcaliDash with single or split
       frontend/backend deployment modes.
-    digest: 041a9c2d6c637f7e8cf45e9373eee8ccbfd533c6386b3f3a986d5b68e58b0c09
+    digest: 6679fb8a8b10daae374cc55874f3570602ded57eb8393a8bbccbe4df022f5414
     home: https://github.com/ZimengXiong/ExcaliDash
     keywords:
     - excalidash
@@ -29,4 +29,4 @@ entries:
     urls:
     - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-26T14:42:03.082679+05:30"
+generated: "2026-04-26T15:25:50.112778+05:30"

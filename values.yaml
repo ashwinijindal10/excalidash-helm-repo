@@ -47,16 +47,7 @@ frontend:
     annotations: {}
     labels: {}
   resources: {}
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsUser: 0
-    capabilities:
-      add:
-        - CHOWN
-      drop:
-        - ALL
-    seccompProfile:
-      type: RuntimeDefault
+  containerSecurityContext: {}
   command: []
   args: []
   env:
@@ -115,16 +106,7 @@ backend:
     annotations: {}
     labels: {}
   resources: {}
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsUser: 0
-    capabilities:
-      add:
-        - CHOWN
-      drop:
-        - ALL
-    seccompProfile:
-      type: RuntimeDefault
+  containerSecurityContext: {}
   command: []
   args: []
   env:

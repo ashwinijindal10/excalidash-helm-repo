@@ -13,10 +13,10 @@ entries:
           description: Relax default container security contexts to avoid startup filesystem permission failures.
     apiVersion: v2
     appVersion: 0.4.27
-    created: "2026-04-26T15:55:07.054174+05:30"
+    created: "2026-05-15T01:43:49.612302+05:30"
     description: Production-oriented Helm chart for ExcaliDash with single or split
       frontend/backend deployment modes.
-    digest: 2feb79f5a58804ce6495f3a051ad6eaf8070f05c61f1eead83e0379051014678
+    digest: 21599de6e7b6f5b8e1eeb44ace24a3e16bbf4547031998b4d4fd1c77790416eb
     home: https://github.com/ZimengXiong/ExcaliDash
     keywords:
     - excalidash
@@ -35,4 +35,4 @@ entries:
     urls:
     - https://ashwinijindal10.github.io/excalidash-helm-repo/charts/excalidash-0.1.6.tgz
     version: 0.1.6
-generated: "2026-04-26T15:55:07.052175+05:30"
+generated: "2026-05-15T01:43:49.610401+05:30"

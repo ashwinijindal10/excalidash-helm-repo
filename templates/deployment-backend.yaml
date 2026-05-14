@@ -85,9 +85,15 @@ spec:
               containerPort: {{ .Values.backend.service.port }}
               protocol: TCP
           env:
+            {{- $extraEnvNames := list }}
+            {{- range .Values.backend.extraEnv }}
+            {{- $extraEnvNames = append $extraEnvNames .name }}
+            {{- end }}
             {{- range $key, $value := .Values.backend.env }}
+            {{- if not (has $key $extraEnvNames) }}
             - name: {{ $key }}
               value: {{ $value | quote }}
+            {{- end }}
             {{- end }}
             {{- range .Values.backend.extraEnv }}
             {{- toYaml (list .) | nindent 12 }}

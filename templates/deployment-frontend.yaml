@@ -91,8 +91,12 @@ spec:
           env:
             - name: BACKEND_URL
               value: {{ include "excalidash.computedBackendUrl" . | quote }}
+            {{- $extraEnvNames := list }}
+            {{- range .Values.frontend.extraEnv }}
+            {{- $extraEnvNames = append $extraEnvNames .name }}
+            {{- end }}
             {{- range $key, $value := .Values.frontend.env }}
-            {{- if ne $key "BACKEND_URL" }}
+            {{- if and (ne $key "BACKEND_URL") (not (has $key $extraEnvNames)) }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
